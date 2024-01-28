@@ -59,8 +59,6 @@ def startMenu():
             #mousePosition = BtnEvent.buttonEvent(btnEvent)
             #ask all the buttons if the mouse was pressed on their coordinate
             event=BtnEventHandler.locateEventButton(screenBtns,btnEvent)
-            #print(re.findall('button .* was pressed','button Play was pressed'))
-            #if event == re.search('button .* was pressed',event):
             if  event != None:
                 # if a button was pressed then perform action based on button name 'or button position'
                 if event.lower() == "play":

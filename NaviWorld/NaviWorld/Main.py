@@ -3,13 +3,15 @@ from Events import ButtonEvent
 from Events import WindowEvent
 from SqliteInterface import DataBase
 from PIL import Image
+import cv2
 import io
 import base64
 import pygame
 from pygame.locals import Color
 
 def convertBG(img,imgName):
-    noBG= Image.open(img)
+    print(type(img))
+    noBG= Image.open(io.BytesIO(img))
     noBG=img.convert("RGBA")
     data=noBG.getdata()
     newData=[]
@@ -40,15 +42,15 @@ def appStart(screen):
     astroBase.OpenDataBase()
     #modify this for new database
     astroData = astroBase.readBlobData(3)
-    #screen.blit(pygame.image.fromstring(astroData,(920,764),'RGBX'))
-    #print(pygame.image.load(openimgBytes(astroData)))
-    #token = pygame.image.load(openimgBytes(astroData))
-    #screen.blit(token, (0,0))   
+    '''
+    print(type(astroData))
     myStr = astroData[3].replace("(", "")
     myStr = myStr.replace(")", "")
     myStr = myStr.replace(",", " ")
     myList = myStr.split()
+
     mytuple=tuple(map(int,myList))
+    '''
     #test this---->
     convertBG(astroData[1],astroData[0])
     #keep this---->
@@ -87,19 +89,7 @@ def appStart(screen):
                     else:
                         print(gameEvent)
                         break'''
-                    #create tokens and populate the bar with them, store token data in a sqlite database
 
-                    #for event in gameEvent:
-                    #    if WindowEvent.imageHover(event,bottomSideBar) == False:
-                    #        while animationSize != 0:
-                    #            animationSize = decreaseSize(screen,animationSize,bgImageRef,screenX,screenY,defaultLocation)
-                     #           break
-                    #        break
-                #if WindowEvent.imageHover(event,bottomSideBar) == False:
-                #    while animationSize != 0:
-                #            animationSize = decreaseSize(screen,animationSize,bgImageRef,screenX,screenY,defaultLocation)
-                #            if WindowEvent.imageHover(event,bottomSideBar):
-                #                animationSize = increaseSize(screen,animationSize,bgImageRef,screenX,screenY,defaultLocation)
             else:
                 while animationSize != 0:
                     animationSize = decreaseSize(screen,animationSize,bgImageRef,screenX,screenY,defaultLocation)
@@ -112,11 +102,8 @@ def openimgBytes(image):
     print(type(image))
     decode = base64.b64decode(image)
     byteimage = io.BytesIO(decode)
-    #byteimage = byteimage.read()
-    #print(byteimage)
     image = Image.open(byteimage)
     image = image.convert('RGB')
-    #image.show()
     return image
 
 def bytesToFile(image,imageName):
@@ -124,13 +111,10 @@ def bytesToFile(image,imageName):
     print(type(image))
     decode = base64.b64decode(image)
     byteimage = io.BytesIO(decode)
-    #byteimage = byteimage.read()
-    #print(byteimage)
     image = Image.open(byteimage)
     image = image.convert('RGB')
     imagePath+=imageName + '.png'
     image.save(imagePath)
-    #image.show()
     return imagePath
 
 def increaseSize(screen,animationSize,bgImageRef,screenX,screenY,defaultLocation):

@@ -38,14 +38,19 @@ class DataBase():
             #binaryData = file.read()
             mode = file.mode
             size = file.size
-            #binaryData = base64.b64encode(file)
-            
+            #binaryData = base64.b64encode(file)        
         with open(filename, 'rb') as file:
             binaryData = file.read()
             binaryData = base64.b64encode(binaryData)
         tupleOfValues=(name,binaryData,str(mode),str(size))     
         return tupleOfValues
-
+    
+#TRYING THIS->
+    def cBinary(self,fileName):
+        with open(fileName, "rb") as file:
+            binaryData = file.read()
+        return binaryData
+    
     def writeTofile(self,data, filename):
         # Convert binary data to proper format and write it on Hard Disk
         with open(filename, 'wb') as file:
@@ -86,20 +91,20 @@ class DataBase():
 
     def insertBLOB(self,photo):
         try:
+            binary = self.cBinary(photo)
+            t=("test",binary,1,1)
             sqliteConnection = sqlite3.connect('sqliteData//TokensDB')
             cursor = sqliteConnection.cursor()
             print("Connected to SQLite")
-            #? is replaced when executed
-            sqlite_insert_blob_query = """ INSERT INTO Tokens
+            sqlite_insert_blob_query = f""" INSERT INTO Tokens
                                     (name,token, mode, size) VALUES (?,?,?,?)"""
             #sqlite_insert_blob_query = """ select * from sqlite_master where type='table'"""
 
-            data_tuple = self.convertToBinaryData(photo)
             #empPhoto = photo.tobytes()
             #resume = convertToBinaryData(resumeFile)
             # Convert data into tuple format
             #data_tuple = (values[0],str(values[1]),str(values[2]))
-            cursor.execute(sqlite_insert_blob_query, data_tuple)
+            cursor.execute(sqlite_insert_blob_query,t)
             sqliteConnection.commit()
             print("Image and file inserted successfully as a BLOB into a table:", cursor.fetchall())
             cursor.close()
