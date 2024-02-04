@@ -11,17 +11,7 @@ from pygame.locals import Color
 
 def convertBG(img,imgName):
     print(type(img))
-    noBG= Image.open(io.BytesIO(img))
-    noBG=img.convert("RGBA")
-    data=noBG.getdata()
-    newData=[]
-    for item in data:
-        if item[0] == 255 and item[1] == 255 and item[2] == 255:
-            newData.append((255,255,255,0))
-        else:
-            newData.append(item)
-    img.putdata(newData)
-    img.save('Tokens/'+imgName)
+    noBG= Image.open("Test/"+imgName)
     return None
 
 #need logic that says, 'when you resize the screen, resize the image'. - complete 
@@ -41,7 +31,8 @@ def appStart(screen):
     astroBase = DataBase('sqliteData//tokensDB')
     astroBase.OpenDataBase()
     #modify this for new database
-    astroData = astroBase.readBlobData(3)
+    astroData = astroBase.readBlobData(4)
+    astroBase.writeTofile(astroData[1],astroData[0] + ".png","Test/")
     '''
     print(type(astroData))
     myStr = astroData[3].replace("(", "")
@@ -52,35 +43,24 @@ def appStart(screen):
     mytuple=tuple(map(int,myList))
     '''
     #test this---->
-    convertBG(astroData[1],astroData[0])
+    convertBG(astroData[1],astroData[0] + ".png")
     #keep this---->
     #myImage = bytesToFile(astroData[1],astroData[0])
     #<-----keep this
-    #print(myImage)
-    #print(myList[0],myList[1])
-    #'''assuming that the database has all required data.... this should work... but it doesnt'''
-    #myImage=pygame.image.load(myImage).convert_alpha()
-    #myImage.set_colorkey(Color('white'))
     myImage=pygame.image.load('Test/mapMarker_noBG.png').convert_alpha()
 
-    #myImage.get_rect(x=myList[0],y=myList[1])
-    #token = pygame.image.fromstring(astroData[0], mytuple, astroData[1])
     screen.blit(myImage, (0,0))
     pygame.display.flip()
 
     while True:
-        #screen.blit(dest=(0,screenX),area=bottomSideBar)
-        #need to seperate into a more managable form - 'Complete'
+
         pygame.display.update()
-        gameEvent = pygame.event.get()
-        #print(gameEvent,'begin')     
+        gameEvent = pygame.event.get()   
         for event in gameEvent:
             if WindowEvent.windowResize(event):
                 screenX,screenY = resizeBackground(screen,bgImage,defaultLocation)
             if WindowEvent.imageHover(event,bottomSideBar):
-                #print(gameEvent,1)
                 while animationSize != -10:
-                    #turn this and the previous block into a function - 'Done'
                     #cancel the animation if you are not moused over the element and reverse it
                     animationSize = increaseSize(screen,animationSize,bgImageRef,screenX,screenY,defaultLocation) 
                     '''gameEvent = pygame.event.get()

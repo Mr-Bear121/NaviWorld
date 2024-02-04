@@ -51,9 +51,9 @@ class DataBase():
             binaryData = file.read()
         return binaryData
     
-    def writeTofile(self,data, filename):
+    def writeTofile(self,data, filename, path=""):
         # Convert binary data to proper format and write it on Hard Disk
-        with open(filename, 'wb') as file:
+        with open(path+filename, 'wb') as file:
             file.write(data)
         print("Stored blob data into: ", filename, "\n")
 
@@ -61,33 +61,21 @@ class DataBase():
     def readBlobData(self,empId):
         try:
             tupleinfo=None
-            #sqliteConnection = sqlite3.connect('sqliteData//tokensDataBase')
-            #cursor = sqliteConnection.cursor()
+
             sql_fetch_blob_query = """SELECT * from tokens where id = ?"""
             self.sqlCursor.execute(sql_fetch_blob_query, (empId,))
             record = self.sqlCursor.fetchall()
             for row in record:
-                #print("Id = ", row[0], "Name = ", row[1])
                 name=row[1]
                 photo = row[2]
                 mode = row[3]
                 size = row[4]
                 tupleinfo = (name,photo,mode,size)
-                #resumeFile = row[3]
 
-                #print("Storing employee image and resume on disk \n")
-                #photoPath = "test" + str(name) + ".jpg"
-                #resumePath = "E:\pynative\Python\photos\db_data\\" + name + "_resume.txt"
-                #self.writeTofile(photo, photoPath)
-            #self.sqlCursor.close()
             return tupleinfo
 
         except sqlite3.Error as error:
             print("Failed to read blob data from sqlite table", error)
-        #finally:
-            #if self.sqliteConnection:
-                #self.sqliteConnection.close()
-                #print("sqlite connection is closed")
 
     def insertBLOB(self,photo):
         try:
